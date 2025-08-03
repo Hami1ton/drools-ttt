@@ -5,11 +5,11 @@ import javax.swing.JLabel;
 rule "ボタン押下時に手番更新"
   when
     GameStatus( isGameOver == false )
-    field : Field( isFilled == false, btn.getText() == "" )
+    field : Field( isFilled == false, getBtn().getText() == "" )
     statusLabel: JLabel()
     player: CurrentPlayer()
   then
-    field.btn.setText(player.getMark());
+    field.getBtn().setText(player.getMark());
     modify ( field ) { isFilled = true };
     if (player.getMark() == "◯"){
       player.setMark("✕");

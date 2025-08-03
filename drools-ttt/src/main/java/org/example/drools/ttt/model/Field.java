@@ -10,7 +10,7 @@ public class Field {
 
     public boolean isFilled = false;
 
-    public JButton btn; 
+    private JButton btn; 
 
     public Field(int x, int y, JButton btn) {
         this.x = x;
@@ -25,5 +25,10 @@ public class Field {
     public int getY(){
         return y;
     }
+
+    public JButton getBtn(){
+        return btn;
+    }
+
 
 }
