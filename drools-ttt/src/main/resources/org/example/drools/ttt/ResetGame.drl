@@ -66,5 +66,17 @@ rule "ステータス初期化_引き分け時"
     delete( cmd ); 
 end
 
+rule "ステータス初期化_ゲームオーバー以外"
+  salience 10
+  when
+    cmd : ResetCommand()
+    not Winner()
+    status : GameStatus( isGameOver == false)
+  then
+    update(status);
+    delete( cmd ); 
+end
+
+
 
 
