@@ -2,16 +2,17 @@ package org.example.drools.ttt;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-import org.example.drools.ttt.model.*;
+
+import org.example.drools.ttt.model.Field;
+import org.example.drools.ttt.model.ResetCommand;
 import org.kie.api.runtime.KieSession;
 
 
@@ -19,7 +20,7 @@ public class Game extends JFrame {
 
     private JButton[][] buttons = new JButton[3][3];
 
-    KieSession kSession;
+    private KieSession kSession;
 
     public Game(KieSession kSession) {
         this.kSession = kSession;
@@ -28,7 +29,6 @@ public class Game extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(500, 550);
         setLocationRelativeTo(null);
-        setLayout(new BorderLayout());
 
         // ステータスラベル
         JLabel statusLabel = new JLabel("◯ の番です", SwingConstants.CENTER);
@@ -46,8 +46,10 @@ public class Game extends JFrame {
         JPanel boardPanel = new JPanel(new GridLayout(3, 3));
         boardPanel.setBackground(Color.WHITE);
         boardPanel.setBounds(0, 0, 400, 400);
-        Font buttonFont = new Font("SansSerif", Font.BOLD, 48);
+        add(boardPanel, BorderLayout.CENTER);
 
+        // ボタン
+        Font buttonFont = new Font("SansSerif", Font.BOLD, 48);
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 JButton btn = new JButton("");
@@ -60,11 +62,6 @@ public class Game extends JFrame {
                 this.kSession.insert(btn);
             }
         }
-
-        JLayeredPane layeredPane = new JLayeredPane();
-        layeredPane.setPreferredSize(new Dimension(400, 400));
-        layeredPane.add(boardPanel, JLayeredPane.DEFAULT_LAYER);
-        add(layeredPane, BorderLayout.CENTER);
 
         setVisible(true);
 

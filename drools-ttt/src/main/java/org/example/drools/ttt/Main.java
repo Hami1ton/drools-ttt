@@ -8,8 +8,8 @@ public class Main {
 
     public static void main(String[] args) {
         KieContainer kc = KieServices.Factory.get().getKieClasspathContainer();
-        final KieSession ksession = kc.newKieSession();
+        final KieSession kSession = kc.newKieSession();
    
-        new Game(ksession);
+        new Game(kSession);
     }
 }
