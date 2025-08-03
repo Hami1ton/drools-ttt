@@ -38,7 +38,7 @@ rule "プレイヤー初期化"
     ResetCommand()
     player: CurrentPlayer()
   then
-    modify ( player ) { mark = "◯" };
+    modify ( player ) { setMark("◯"); };
 end
 
 rule "ステータス初期化_勝敗確定時"

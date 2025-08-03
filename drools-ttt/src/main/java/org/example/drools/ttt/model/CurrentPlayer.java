@@ -2,7 +2,7 @@ package org.example.drools.ttt.model;
 
 public class CurrentPlayer {
 
-    public String mark;
+    private String mark;
 
     public CurrentPlayer() {}
 

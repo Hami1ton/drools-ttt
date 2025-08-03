@@ -4,9 +4,9 @@ import javax.swing.JButton;
 
 public class Field {
 
-    public int x;
+    private int x;
 
-    public int y;
+    private int y;
 
     public boolean isFilled = false;
 
@@ -17,4 +17,13 @@ public class Field {
         this.y = y;
         this.btn = btn;
     }
+
+    public int getX(){
+        return x;
+    }
+
+    public int getY(){
+        return y;
+    }
+
 }
