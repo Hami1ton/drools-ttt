@@ -18,7 +18,6 @@ import org.kie.api.runtime.KieSession;
 public class Game extends JFrame {
 
     private JButton[][] buttons = new JButton[3][3];
-    private JLabel statusLabel = new JLabel("◯ の番です", SwingConstants.CENTER);;
 
     KieSession kSession;
 
@@ -31,7 +30,8 @@ public class Game extends JFrame {
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
-        // ラベル
+        // ステータスラベル
+        JLabel statusLabel = new JLabel("◯ の番です", SwingConstants.CENTER);
         statusLabel.setFont(new Font("SansSerif", Font.BOLD, 18));
         add(statusLabel, BorderLayout.NORTH);
         this.kSession.insert(statusLabel);
@@ -45,6 +45,7 @@ public class Game extends JFrame {
         // 盤面
         JPanel boardPanel = new JPanel(new GridLayout(3, 3));
         boardPanel.setBackground(Color.WHITE);
+        boardPanel.setBounds(0, 0, 400, 400);
         Font buttonFont = new Font("SansSerif", Font.BOLD, 48);
 
         for (int i = 0; i < 3; i++) {
@@ -52,7 +53,6 @@ public class Game extends JFrame {
                 JButton btn = new JButton("");
                 btn.setFont(buttonFont);
                 btn.setFocusPainted(false);
-                btn.setBackground(new Color(220, 240, 255)); // 薄い青
                 int row = i, col = j;
                 btn.addActionListener(e -> handleMove(row, col));
                 buttons[i][j] = btn;
@@ -63,7 +63,6 @@ public class Game extends JFrame {
 
         JLayeredPane layeredPane = new JLayeredPane();
         layeredPane.setPreferredSize(new Dimension(400, 400));
-        boardPanel.setBounds(0, 0, 400, 400);
         layeredPane.add(boardPanel, JLayeredPane.DEFAULT_LAYER);
         add(layeredPane, BorderLayout.CENTER);
 

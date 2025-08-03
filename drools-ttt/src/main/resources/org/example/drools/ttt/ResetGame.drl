@@ -11,7 +11,6 @@ rule "ボタンの文字列をリセット"
     btn : JButton()
   then
     btn.setText("");
-    btn.setBackground(new Color(220, 240, 255));
 end
 
 rule "手番を示すラベルを初期化"

@@ -6,13 +6,13 @@ rule "プレイヤー"
   when
     not CurrentPlayer()
   then
-    insert(new CurrentPlayer("◯"));    
+    insert(new CurrentPlayer("◯"));
 end
 
 rule "ゲームステータス"
   when
     not GameStatus()
   then
-    insert(new GameStatus());    
+    insert(new GameStatus());
 end
 
