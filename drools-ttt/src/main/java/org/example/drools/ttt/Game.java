@@ -14,13 +14,11 @@ import javax.swing.SwingConstants;
 import org.example.drools.ttt.model.*;
 import org.kie.api.runtime.KieSession;
 
+
 public class Game extends JFrame {
 
     private JButton[][] buttons = new JButton[3][3];
-    private CurrentPlayer player = new CurrentPlayer("◯");
     private JLabel statusLabel = new JLabel("◯ の番です", SwingConstants.CENTER);;
-
-    GameStatus status = new GameStatus();
 
     KieSession kSession;
 
@@ -33,15 +31,18 @@ public class Game extends JFrame {
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
+        // ラベル
         statusLabel.setFont(new Font("SansSerif", Font.BOLD, 18));
         add(statusLabel, BorderLayout.NORTH);
         this.kSession.insert(statusLabel);
 
+        // リセットボタン
         JButton resetButton = new JButton("リセット");
         resetButton.setFont(new Font("SansSerif", Font.PLAIN, 16));
         resetButton.addActionListener(e -> resetGame());
         add(resetButton, BorderLayout.SOUTH);
 
+        // 盤面
         JPanel boardPanel = new JPanel(new GridLayout(3, 3));
         boardPanel.setBackground(Color.WHITE);
         Font buttonFont = new Font("SansSerif", Font.BOLD, 48);
@@ -66,18 +67,13 @@ public class Game extends JFrame {
         layeredPane.add(boardPanel, JLayeredPane.DEFAULT_LAYER);
         add(layeredPane, BorderLayout.CENTER);
 
-        this.kSession.insert(player);
-        this.kSession.insert(status);
-
         setVisible(true);
 
         this.kSession.fireUntilHalt();
     }
 
     private void handleMove(int row, int col) {
-        if (!status.isGameOver) {
-            this.kSession.insert(new Field(row, col, buttons[row][col]));
-        }
+        this.kSession.insert(new Field(row, col, buttons[row][col]));
     }
 
     private void resetGame() {

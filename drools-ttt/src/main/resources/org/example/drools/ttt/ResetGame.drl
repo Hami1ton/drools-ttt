@@ -1,6 +1,5 @@
 package org.example.drools.ttt;
 
-import org.example.drools.ttt.model.*;
 import javax.swing.JButton;
 import java.awt.Color;
 import javax.swing.JLabel;
