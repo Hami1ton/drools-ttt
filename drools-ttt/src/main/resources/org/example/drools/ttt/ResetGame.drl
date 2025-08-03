@@ -1,0 +1,72 @@
+package org.example.drools.ttt;
+
+import org.example.drools.ttt.model.*;
+import javax.swing.JButton;
+import java.awt.Color;
+import javax.swing.JLabel;
+
+rule "ボタンの文字列をリセット"
+  salience 20
+  when
+    ResetCommand()
+    btn : JButton()
+  then
+    btn.setText("");
+    btn.setBackground(new Color(220, 240, 255));
+end
+
+rule "手番を示すラベルを初期化"
+  salience 20
+  when
+    ResetCommand()
+    statusLabel: JLabel()
+  then
+    statusLabel.setText("◯ の番です");
+    update(statusLabel);
+end
+
+rule "盤面更新データを削除"
+  salience 20
+  when
+    ResetCommand()
+    field : Field()
+  then
+    delete( field ); 
+end
+
+rule "プレイヤー初期化"
+  salience 20
+  when
+    ResetCommand()
+    player: CurrentPlayer()
+  then
+    modify ( player ) { mark = "◯" };
+end
+
+rule "ステータス初期化_勝敗確定時"
+  salience 10
+  when
+    cmd : ResetCommand()
+    winner : Winner()
+    status : GameStatus( isGameOver == true)
+  then
+    modify ( status ) { isGameOver = false };
+    update(status);
+    delete( winner ); 
+    delete( cmd ); 
+end
+
+rule "ステータス初期化_引き分け時"
+  salience 10
+  when
+    cmd : ResetCommand()
+    not Winner()
+    status : GameStatus( isGameOver == true)
+  then
+    modify ( status ) { isGameOver = false };
+    update(status);
+    delete( cmd ); 
+end
+
+
+

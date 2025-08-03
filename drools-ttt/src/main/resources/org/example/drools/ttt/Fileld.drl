@@ -1,0 +1,20 @@
+package org.example.drools.ttt;
+
+import javax.swing.JLabel;
+
+rule "ボタン押下時に手番更新"
+  when
+    GameStatus( isGameOver == false )
+    field : Field( isFilled == false, btn.getText() == "" )
+    statusLabel: JLabel()
+    player: CurrentPlayer()
+  then
+    field.btn.setText(player.getMark());
+    modify ( field ) { isFilled = true };
+    if (player.getMark() == "◯"){
+      player.setMark("✕");
+    } else {
+      player.setMark("◯");
+    }
+    statusLabel.setText(player.getMark() + " の番です");
+end
