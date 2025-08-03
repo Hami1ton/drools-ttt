@@ -11,10 +11,7 @@ import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-import org.example.drools.ttt.model.CurrentPlayer;
-import org.example.drools.ttt.model.Field;
-import org.example.drools.ttt.model.GameStatus;
-import org.example.drools.ttt.model.ResetCommand;
+import org.example.drools.ttt.model.*;
 import org.kie.api.runtime.KieSession;
 
 public class Game extends JFrame {
@@ -73,10 +70,11 @@ public class Game extends JFrame {
         this.kSession.insert(status);
 
         setVisible(true);
+
+        this.kSession.fireUntilHalt();
     }
 
     private void handleMove(int row, int col) {
-
         if (!status.isGameOver) {
             this.kSession.insert(new Field(row, col, buttons[row][col]));
         }
