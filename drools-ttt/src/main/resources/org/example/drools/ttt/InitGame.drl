@@ -1,0 +1,18 @@
+package org.example.drools.ttt;
+
+import org.example.drools.ttt.model.*;
+
+rule "プレイヤー"
+  when
+    not CurrentPlayer()
+  then
+    insert(new CurrentPlayer("◯"));
+end
+
+rule "ゲームステータス"
+  when
+    not GameStatus()
+  then
+    insert(new GameStatus());
+end
+

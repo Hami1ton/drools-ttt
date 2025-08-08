@@ -1,0 +1,70 @@
+package org.example.drools.ttt;
+
+import org.example.drools.ttt.model.ResetCommand;
+import javax.swing.JLabel;
+
+
+rule "勝敗判定_行"
+  when
+    status : GameStatus( isGameOver == false )
+    $field_1 : Field(isFilled == true)
+    $field_2 : Field(isFilled == true, x == $field_1.x, y != $field_1.y, getBtn().getText() == $field_1.getBtn().getText())
+    $field_3 : Field(isFilled == true, x == $field_1.x, y != $field_1.y, y != $field_2.y, getBtn().getText() == $field_1.getBtn().getText())
+  then
+    modify ( status ) { isGameOver = true };
+    insert(new Winner($field_1.getBtn().getText()));
+end
+
+rule "勝敗判定_列"
+  when
+    status : GameStatus( isGameOver == false )
+    $field_1 : Field(isFilled == true)
+    $field_2 : Field(isFilled == true, y == $field_1.y, x != $field_1.x, getBtn().getText() == $field_1.getBtn().getText())
+    $field_3 : Field(isFilled == true, y == $field_1.y, x != $field_1.x, x != $field_2.x, getBtn().getText() == $field_1.getBtn().getText())
+  then
+    modify ( status ) { isGameOver = true };
+    insert(new Winner($field_1.getBtn().getText()));
+end
+
+rule "勝敗判定_斜め_1"
+  when
+    status : GameStatus( isGameOver == false )
+    $field_1 : Field(isFilled == true, x == 0, y == 0)
+    $field_2 : Field(isFilled == true, x == 1, y == 1, getBtn().getText() == $field_1.getBtn().getText())
+    $field_3 : Field(isFilled == true, x == 2, y == 2, getBtn().getText() == $field_1.getBtn().getText())
+  then
+    modify ( status ) { isGameOver = true };
+    insert(new Winner($field_1.getBtn().getText()));
+end
+
+rule "勝敗判定_斜め_2"
+  when
+    status : GameStatus( isGameOver == false )
+    $field_1 : Field(isFilled == true, x == 0, y == 2)
+    $field_2 : Field(isFilled == true, x == 1, y == 1, getBtn().getText() == $field_1.getBtn().getText())
+    $field_3 : Field(isFilled == true, x == 2, y == 0, getBtn().getText() == $field_1.getBtn().getText())
+  then
+    modify ( status ) { isGameOver = true };
+    insert(new Winner($field_1.getBtn().getText()));
+end
+
+rule "勝者決定時にラベルを更新する"
+  when
+    winner : Winner()
+    GameStatus( isGameOver == true)
+    statusLabel: JLabel()
+  then
+    statusLabel.setText(winner.getMark() + " の勝ち！");
+end
+
+rule "引き分け"
+  when
+    status : GameStatus( isGameOver == false)
+    statusLabel: JLabel()
+    accumulate( Field( isFilled == true );
+        $count : count() ; $count == 9)
+  then
+    modify ( status ) { isGameOver = true };
+    statusLabel.setText("引き分け！");
+    modify ( status ) { isGameOver = true };
+end
