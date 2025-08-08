@@ -18,7 +18,8 @@ import org.kie.api.runtime.KieSession;
 
 public class Game extends JFrame {
 
-    private JButton[][] buttons = new JButton[3][3];
+    // 押下済のボタン記録用
+    private String[][] fields = new String[3][3];
 
     private KieSession kSession;
 
@@ -56,8 +57,7 @@ public class Game extends JFrame {
                 btn.setFont(buttonFont);
                 btn.setFocusPainted(false);
                 int row = i, col = j;
-                btn.addActionListener(e -> handleMove(row, col));
-                buttons[i][j] = btn;
+                btn.addActionListener(e -> handleMove(row, col, btn));
                 boardPanel.add(btn);
                 this.kSession.insert(btn);
             }
@@ -68,11 +68,15 @@ public class Game extends JFrame {
         this.kSession.fireUntilHalt();
     }
 
-    private void handleMove(int row, int col) {
-        this.kSession.insert(new Field(row, col, buttons[row][col]));
+    private void handleMove(int row, int col, JButton btn) {
+        if (this.fields[row][col] == null) {
+            this.fields[row][col] = "配置済";
+            this.kSession.insert(new Field(row, col, btn));
+        }
     }
 
     private void resetGame() {
+        this.fields = new String[3][3];
         this.kSession.insert(new ResetCommand());
     }
 }
