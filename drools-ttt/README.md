@@ -7,6 +7,8 @@
 - Apache Maven 3.9.6
 - Drools 10.0.0
 
+## structure 
+
 ```mermaid
 
 flowchart TD
