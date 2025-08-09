@@ -10,6 +10,6 @@ public class Main {
         KieContainer kc = KieServices.Factory.get().getKieClasspathContainer();
         final KieSession kSession = kc.newKieSession();
    
-        new Game(kSession);
+        new GameUI(kSession);
     }
 }

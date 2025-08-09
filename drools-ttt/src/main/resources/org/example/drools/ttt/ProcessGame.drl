@@ -1,36 +1,33 @@
 package org.example.drools.ttt;
 
-import javax.swing.JLabel;
 import org.example.drools.ttt.model.*;
-import org.example.drools.ttt.command.*;
+import org.example.drools.ttt.incmd.*;
+import org.example.drools.ttt.outcmd.*;
 
-rule "プレイヤー"
-  when
-    not CurrentPlayer()
-  then
-    insert(new CurrentPlayer("◯"));
-end
 
-rule "ゲームステータス"
+rule "ゲームステータスがなければ作成"
   when
     not GameStatus()
   then
     insert(new GameStatus());
 end
 
-rule "ボタン押下時に手番更新"
+rule "◯の手番_マークを生成"
   when
     GameStatus( isGameOver == false )
-    field : Field( isFilled == false, getBtn().getText() == "" )
-    statusLabel: JLabel()
-    player: CurrentPlayer()
+    $cmd: PlaceCmd(mark == "◯")
+    not Mark(row == $cmd.row, col == $cmd.col)
   then
-    field.getBtn().setText(player.getMark());
-    modify ( field ) { isFilled = true };
-    if (player.getMark() == "◯"){
-      player.setMark("✕");
-    } else {
-      player.setMark("◯");
-    }
-    statusLabel.setText(player.getMark() + " の番です");
+    insert(new Mark($cmd.row(), $cmd.col(), $cmd.mark()));
+    insert(new LabelUpdCmd("✕ の番です"));
+end
+
+rule "✕の手番_マークを生成"
+  when
+    GameStatus( isGameOver == false )
+    $cmd: PlaceCmd(mark == "✕")
+    not Mark(row == $cmd.row, col == $cmd.col)
+  then
+    insert(new Mark($cmd.row(), $cmd.col(), $cmd.mark()));
+    insert(new LabelUpdCmd("◯ の番です"));
 end

@@ -11,10 +11,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-import org.example.drools.ttt.command.PlaceCommand;
-import org.example.drools.ttt.command.ResetCommand;
-import org.example.drools.ttt.model.Field;
-import org.example.drools.ttt.model.Winner;
+import org.example.drools.ttt.incmd.PlaceCmd;
+import org.example.drools.ttt.incmd.ResetCmd;
+import org.example.drools.ttt.outcmd.LabelUpdCmd;
 import org.kie.api.event.rule.ObjectDeletedEvent;
 import org.kie.api.event.rule.ObjectInsertedEvent;
 import org.kie.api.event.rule.ObjectUpdatedEvent;
@@ -22,20 +21,23 @@ import org.kie.api.event.rule.RuleRuntimeEventListener;
 import org.kie.api.runtime.KieSession;
 
 
-public class Game extends JFrame {
-
-    // 押下済のボタン記録用
-    private String[][] fields = new String[3][3];
-
-    private PlaceCommand[][] placeCommands = new PlaceCommand[3][3];
-
-    private JButton[][] btns = new JButton[3][3];
-
-    private JLabel statusLabel = new JLabel("◯ の番です", SwingConstants.CENTER);
+public class GameUI extends JFrame {
 
     private KieSession kSession;
 
-    public Game(KieSession kSession) {
+    // 押下済のボタン記録用
+    private PlaceCmd[][] placeCmds = new PlaceCmd[3][3];
+
+    private JButton[][] btns = new JButton[3][3];
+
+    // 先行は「◯」
+    private String currentMark = "◯";
+
+    private JLabel statusLabel = new JLabel("◯ の番です", SwingConstants.CENTER);
+
+    private boolean gameOver = false;
+
+    public GameUI(KieSession kSession) {
         this.kSession = kSession;
 
         setTitle("マルバツゲーム");
@@ -46,8 +48,7 @@ public class Game extends JFrame {
         // ステータスラベル
         this.statusLabel.setFont(new Font("SansSerif", Font.BOLD, 18));
         add(statusLabel, BorderLayout.NORTH);
-        this.kSession.insert(statusLabel);
-
+        
         // リセットボタン
         JButton resetButton = new JButton("リセット");
         resetButton.setFont(new Font("SansSerif", Font.PLAIN, 16));
@@ -68,10 +69,9 @@ public class Game extends JFrame {
                 btn.setFont(buttonFont);
                 btn.setFocusPainted(false);
                 int row = i, col = j;
-                btn.addActionListener(e -> handleMove(row, col, btn));
+                btn.addActionListener(e -> place(row, col));
                 this.btns[row][col] = btn;
                 boardPanel.add(btn);
-                this.kSession.insert(btn);
             }
         }
 
@@ -88,7 +88,15 @@ public class Game extends JFrame {
             @Override
             public void objectInserted(ObjectInsertedEvent event) {
                 Object obj = event.getObject();
-                System.out.println("Fact inserted: " + obj.getClass());                
+
+                if (obj.getClass().getName().equals("org.example.drools.ttt.outcmd.LabelUpdCmd")) {
+                    statusLabel.setText(((LabelUpdCmd)obj).label());
+                }
+
+                if (obj.getClass().getName().equals("org.example.drools.ttt.outcmd.GameOverCmd")) {
+                    gameOver = true;
+                }
+                // System.out.println("Fact inserted: " + obj.getClass());
             }
 
             @Override
@@ -99,31 +107,40 @@ public class Game extends JFrame {
         });
     }
 
-    private void handleMove(int row, int col, JButton btn) {
-        if (this.fields[row][col] == null) {
-            this.kSession.insert(new Field(row, col, btn));
-            this.kSession.insert(new PlaceCommand(row, col));
-        }
-    }
-
     private void place(int row, int col) {
-        if (this.placeCommands[row][col] == null) {
-            var cmd = new PlaceCommand(row, col);
-            this.placeCommands[row][col] = cmd;
+        if (gameOver) {
+            return;
+        }
+
+        if (this.placeCmds[row][col] == null) {
+            this.btns[row][col].setText(this.currentMark);
+
+            // ルールエンジンにコマンド投入
+            var cmd = new PlaceCmd(row, col, this.currentMark);
+            this.placeCmds[row][col] = cmd;
             this.kSession.insert(cmd);
+
+            // 手番更新
+            if (this.currentMark.equals("◯")) {
+                this.currentMark = "✕";
+            } else {
+                this.currentMark = "◯";
+            }
         }
     }
 
     private void resetGame() {
-        this.statusLabel = new JLabel("◯ の番です", SwingConstants.CENTER);
-        this.fields = new String[3][3];
-        this.placeCommands = new PlaceCommand[3][3];
+        this.statusLabel.setText("◯ の番です");
+        this.gameOver = false;
+        this.placeCmds = new PlaceCmd[3][3];
+        
         for (JButton[] btns : this.btns) {
             for (JButton btn: btns) {
                 btn.setText("");
             }
         }
+        this.currentMark = "◯";
 
-        this.kSession.insert(new ResetCommand());
+        this.kSession.insert(new ResetCmd());
     }
 }

@@ -8,54 +8,53 @@ import javax.swing.JLabel;
 rule "盤面更新データを削除"
   salience 20
   when
-    ResetCommand()
-    field : Field()
+    ResetCmd()
+    $mark : Mark()
   then
-    delete( field ); 
+    delete( $mark ); 
 end
 
-rule "プレイヤー初期化"
+rule "ラベル更新データを削除"
   salience 20
   when
-    ResetCommand()
-    player: CurrentPlayer()
+    ResetCmd()
+    $labelUpdCmd : LabelUpdCmd()
   then
-    modify ( player ) { setMark("◯"); };
+    delete( $labelUpdCmd ); 
+end
+
+rule "配置コマンドを削除"
+  salience 20
+  when
+    ResetCmd()
+    $placeCmd : PlaceCmd()
+  then
+    delete( $placeCmd ); 
 end
 
 rule "ステータス初期化_勝敗確定時"
   salience 10
   when
-    cmd : ResetCommand()
-    winner : Winner()
-    status : GameStatus( isGameOver == true)
+    $cmd : ResetCmd()
+    $winner : Winner()
+    $gameOverCmd : GameOverCmd()
+    $status : GameStatus( isGameOver == true)
   then
-    modify ( status ) { isGameOver = false };
-    delete( winner ); 
-    delete( cmd ); 
+    delete( $winner );
+    delete( $gameOverCmd );
+    delete( $cmd ); 
+    modify ( $status ) { isGameOver = false };
 end
 
 rule "ステータス初期化_引き分け時"
   salience 10
   when
-    cmd : ResetCommand()
+    cmd : ResetCmd()
     not Winner()
-    status : GameStatus( isGameOver == true)
+    $gameOverCmd : GameOverCmd()
+    $status : GameStatus()
   then
-    modify ( status ) { isGameOver = false };
-    delete( cmd ); 
+    delete( $gameOverCmd );
+    delete( cmd );
+    modify ( $status ) { isGameOver = false };
 end
-
-rule "ステータス初期化_ゲームオーバー以外"
-  salience 10
-  when
-    cmd : ResetCommand()
-    not Winner()
-    status : GameStatus( isGameOver == false)
-  then
-    delete( cmd ); 
-end
-
-
-
-
