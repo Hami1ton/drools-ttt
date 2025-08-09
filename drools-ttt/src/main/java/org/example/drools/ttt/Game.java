@@ -11,8 +11,13 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
+import org.example.drools.ttt.command.PlaceCommand;
+import org.example.drools.ttt.command.ResetCommand;
 import org.example.drools.ttt.model.Field;
-import org.example.drools.ttt.model.ResetCommand;
+import org.kie.api.event.rule.ObjectDeletedEvent;
+import org.kie.api.event.rule.ObjectInsertedEvent;
+import org.kie.api.event.rule.ObjectUpdatedEvent;
+import org.kie.api.event.rule.RuleRuntimeEventListener;
 import org.kie.api.runtime.KieSession;
 
 
@@ -20,6 +25,10 @@ public class Game extends JFrame {
 
     // 押下済のボタン記録用
     private String[][] fields = new String[3][3];
+
+    private JButton[][] btns = new JButton[3][3];
+
+    private JLabel statusLabel = new JLabel("◯ の番です", SwingConstants.CENTER);
 
     private KieSession kSession;
 
@@ -32,8 +41,7 @@ public class Game extends JFrame {
         setLocationRelativeTo(null);
 
         // ステータスラベル
-        JLabel statusLabel = new JLabel("◯ の番です", SwingConstants.CENTER);
-        statusLabel.setFont(new Font("SansSerif", Font.BOLD, 18));
+        this.statusLabel.setFont(new Font("SansSerif", Font.BOLD, 18));
         add(statusLabel, BorderLayout.NORTH);
         this.kSession.insert(statusLabel);
 
@@ -58,24 +66,55 @@ public class Game extends JFrame {
                 btn.setFocusPainted(false);
                 int row = i, col = j;
                 btn.addActionListener(e -> handleMove(row, col, btn));
+                this.btns[row][col] = btn;
                 boardPanel.add(btn);
                 this.kSession.insert(btn);
             }
         }
+
+        addRuleEventListener(this.kSession);
 
         setVisible(true);
 
         this.kSession.fireUntilHalt();
     }
 
+    private void addRuleEventListener(KieSession kSession) {
+        kSession.addEventListener(new RuleRuntimeEventListener() {
+
+            @Override
+            public void objectInserted(ObjectInsertedEvent event) {
+                Object obj = event.getObject();
+                System.out.println("Fact inserted: " + obj.getClass());                
+            }
+
+            @Override
+            public void objectUpdated(ObjectUpdatedEvent event) {}
+
+            @Override
+            public void objectDeleted(ObjectDeletedEvent event) {}
+            
+        });
+
+    }
+
     private void handleMove(int row, int col, JButton btn) {
         if (this.fields[row][col] == null) {
             this.fields[row][col] = "配置済";
             this.kSession.insert(new Field(row, col, btn));
+            this.kSession.insert(new PlaceCommand(row, col));
+        }
+    }
+
+    private void place(int row, int col) {
+        if (this.fields[row][col] == null) {
+            this.fields[row][col] = "配置済";
+            this.kSession.insert(new PlaceCommand(row, col));
         }
     }
 
     private void resetGame() {
+        this.statusLabel = new JLabel("◯ の番です", SwingConstants.CENTER);
         this.fields = new String[3][3];
         this.kSession.insert(new ResetCommand());
     }

@@ -1,6 +1,5 @@
 package org.example.drools.ttt;
 
-import org.example.drools.ttt.model.ResetCommand;
 import javax.swing.JLabel;
 
 
@@ -46,6 +45,17 @@ rule "勝敗判定_斜め_2"
   then
     modify ( status ) { isGameOver = true };
     insert(new Winner($field_1.getBtn().getText()));
+end
+
+rule "勝敗判定_groupby"
+    when
+        groupby(
+            $f : Field( isFilled == true );
+            $group: $f.getX() ;
+            $count: count();
+            $count == 3)
+    then
+        System.out.println("勝敗判定_groupby");
 end
 
 rule "勝者決定時にラベルを更新する"

@@ -1,6 +1,7 @@
 package org.example.drools.ttt;
 
 import org.example.drools.ttt.model.*;
+import org.example.drools.ttt.command.*;
 
 rule "プレイヤー"
   when
