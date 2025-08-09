@@ -1,6 +1,7 @@
 package org.example.drools.ttt;
 
-rule "盤面更新データを削除"
+
+rule "盤面データを削除"
   salience 20
   when
     ResetCmd()
@@ -30,26 +31,26 @@ end
 rule "ステータス初期化_勝敗確定時"
   salience 10
   when
-    $cmd : ResetCmd()
+    $resetCmd : ResetCmd()
     $winner : Winner()
     $gameOverCmd : GameOverCmd()
     $status : GameStatus( isGameOver == true)
   then
     delete( $winner );
     delete( $gameOverCmd );
-    delete( $cmd ); 
+    delete( $resetCmd ); 
     modify ( $status ) { isGameOver = false };
 end
 
 rule "ステータス初期化_引き分け時"
   salience 10
   when
-    $cmd : ResetCmd()
+    $resetCmd : ResetCmd()
     not Winner()
     $gameOverCmd : GameOverCmd()
     $status : GameStatus()
   then
     delete( $gameOverCmd );
-    delete( $cmd );
+    delete( $resetCmd );
     modify ( $status ) { isGameOver = false };
 end

@@ -11,9 +11,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-import org.example.drools.ttt.incmd.PlaceCmd;
-import org.example.drools.ttt.incmd.ResetCmd;
-import org.example.drools.ttt.outcmd.LabelUpdCmd;
+import org.example.drools.ttt.incmd.*;
+import org.example.drools.ttt.outcmd.*;
 import org.kie.api.event.rule.ObjectDeletedEvent;
 import org.kie.api.event.rule.ObjectInsertedEvent;
 import org.kie.api.event.rule.ObjectUpdatedEvent;

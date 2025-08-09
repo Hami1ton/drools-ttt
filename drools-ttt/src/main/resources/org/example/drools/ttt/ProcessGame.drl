@@ -9,25 +9,25 @@ rule "ゲームステータスがなければ作成"
   when
     not GameStatus()
   then
-    insert(new GameStatus());
+    insert( new GameStatus() );
 end
 
 rule "◯の手番_マークを生成"
   when
     GameStatus( isGameOver == false )
-    $cmd: PlaceCmd(mark == "◯")
-    not Mark(row == $cmd.row, col == $cmd.col)
+    $cmd : PlaceCmd( mark == "◯" )
+    not Mark( row == $cmd.row, col == $cmd.col )
   then
-    insert(new Mark($cmd.row(), $cmd.col(), $cmd.mark()));
-    insert(new LabelUpdCmd("✕ の番です"));
+    insert( new Mark($cmd.row(), $cmd.col(), $cmd.mark()) );
+    insert( new LabelUpdCmd("✕ の番です") );
 end
 
 rule "✕の手番_マークを生成"
   when
     GameStatus( isGameOver == false )
-    $cmd: PlaceCmd(mark == "✕")
-    not Mark(row == $cmd.row, col == $cmd.col)
+    $cmd : PlaceCmd( mark == "✕" )
+    not Mark( row == $cmd.row, col == $cmd.col )
   then
-    insert(new Mark($cmd.row(), $cmd.col(), $cmd.mark()));
-    insert(new LabelUpdCmd("◯ の番です"));
+    insert( new Mark($cmd.row(), $cmd.col(), $cmd.mark()) );
+    insert( new LabelUpdCmd("◯ の番です") );
 end
