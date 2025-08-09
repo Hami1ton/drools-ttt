@@ -27,6 +27,8 @@ public class Game extends JFrame {
     // 押下済のボタン記録用
     private String[][] fields = new String[3][3];
 
+    private PlaceCommand[][] placeCommands = new PlaceCommand[3][3];
+
     private JButton[][] btns = new JButton[3][3];
 
     private JLabel statusLabel = new JLabel("◯ の番です", SwingConstants.CENTER);
@@ -93,31 +95,35 @@ public class Game extends JFrame {
             public void objectUpdated(ObjectUpdatedEvent event) {}
 
             @Override
-            public void objectDeleted(ObjectDeletedEvent event) {}
-            
+            public void objectDeleted(ObjectDeletedEvent event) {} 
         });
-
     }
 
     private void handleMove(int row, int col, JButton btn) {
         if (this.fields[row][col] == null) {
-            this.fields[row][col] = "配置済";
             this.kSession.insert(new Field(row, col, btn));
             this.kSession.insert(new PlaceCommand(row, col));
         }
     }
 
     private void place(int row, int col) {
-        if (this.fields[row][col] == null) {
-            this.fields[row][col] = "配置済";
-            this.kSession.insert(new PlaceCommand(row, col));
+        if (this.placeCommands[row][col] == null) {
+            var cmd = new PlaceCommand(row, col);
+            this.placeCommands[row][col] = cmd;
+            this.kSession.insert(cmd);
         }
     }
 
     private void resetGame() {
-        
         this.statusLabel = new JLabel("◯ の番です", SwingConstants.CENTER);
         this.fields = new String[3][3];
+        this.placeCommands = new PlaceCommand[3][3];
+        for (JButton[] btns : this.btns) {
+            for (JButton btn: btns) {
+                btn.setText("");
+            }
+        }
+
         this.kSession.insert(new ResetCommand());
     }
 }

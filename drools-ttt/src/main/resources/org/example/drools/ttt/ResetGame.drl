@@ -4,23 +4,6 @@ import javax.swing.JButton;
 import java.awt.Color;
 import javax.swing.JLabel;
 
-rule "ボタンの文字列をリセット"
-  salience 20
-  when
-    ResetCommand()
-    btn : JButton()
-  then
-    btn.setText("");
-end
-
-rule "手番を示すラベルを初期化"
-  salience 20
-  when
-    ResetCommand()
-    statusLabel: JLabel()
-  then
-    statusLabel.setText("◯ の番です");
-end
 
 rule "盤面更新データを削除"
   salience 20
