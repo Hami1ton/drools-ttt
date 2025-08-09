@@ -7,7 +7,16 @@ rule "盤面データを削除"
     ResetCmd()
     $mark : Mark()
   then
-    delete( $mark ); 
+    delete( $mark );
+end
+
+rule "グローバル盤面データを削除"
+  salience 20
+  when
+    ResetCmd()
+    $gf : GlobalField()
+  then
+    delete( $gf );
 end
 
 rule "ラベル更新データを削除"
@@ -16,7 +25,7 @@ rule "ラベル更新データを削除"
     ResetCmd()
     $labelUpdCmd : LabelUpdCmd()
   then
-    delete( $labelUpdCmd ); 
+    delete( $labelUpdCmd );
 end
 
 rule "配置コマンドを削除"
@@ -25,7 +34,7 @@ rule "配置コマンドを削除"
     ResetCmd()
     $placeCmd : PlaceCmd()
   then
-    delete( $placeCmd ); 
+    delete( $placeCmd );
 end
 
 rule "ステータス初期化_勝敗確定時"
@@ -38,7 +47,7 @@ rule "ステータス初期化_勝敗確定時"
   then
     delete( $winner );
     delete( $gameOverCmd );
-    delete( $resetCmd ); 
+    delete( $resetCmd );
     modify ( $status ) { isGameOver = false };
 end
 
