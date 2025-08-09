@@ -1,78 +1,56 @@
 package org.example.drools.ttt;
 
-import javax.swing.JButton;
-import java.awt.Color;
-import javax.swing.JLabel;
 
-rule "ボタンの文字列をリセット"
+rule "盤面データを削除"
   salience 20
   when
-    ResetCommand()
-    btn : JButton()
+    ResetCmd()
+    $mark : Mark()
   then
-    btn.setText("");
+    delete( $mark ); 
 end
 
-rule "手番を示すラベルを初期化"
+rule "ラベル更新データを削除"
   salience 20
   when
-    ResetCommand()
-    statusLabel: JLabel()
+    ResetCmd()
+    $labelUpdCmd : LabelUpdCmd()
   then
-    statusLabel.setText("◯ の番です");
+    delete( $labelUpdCmd ); 
 end
 
-rule "盤面更新データを削除"
+rule "配置コマンドを削除"
   salience 20
   when
-    ResetCommand()
-    field : Field()
+    ResetCmd()
+    $placeCmd : PlaceCmd()
   then
-    delete( field ); 
-end
-
-rule "プレイヤー初期化"
-  salience 20
-  when
-    ResetCommand()
-    player: CurrentPlayer()
-  then
-    modify ( player ) { setMark("◯"); };
+    delete( $placeCmd ); 
 end
 
 rule "ステータス初期化_勝敗確定時"
   salience 10
   when
-    cmd : ResetCommand()
-    winner : Winner()
-    status : GameStatus( isGameOver == true)
+    $resetCmd : ResetCmd()
+    $winner : Winner()
+    $gameOverCmd : GameOverCmd()
+    $status : GameStatus( isGameOver == true)
   then
-    modify ( status ) { isGameOver = false };
-    delete( winner ); 
-    delete( cmd ); 
+    delete( $winner );
+    delete( $gameOverCmd );
+    delete( $resetCmd ); 
+    modify ( $status ) { isGameOver = false };
 end
 
 rule "ステータス初期化_引き分け時"
   salience 10
   when
-    cmd : ResetCommand()
+    $resetCmd : ResetCmd()
     not Winner()
-    status : GameStatus( isGameOver == true)
+    $gameOverCmd : GameOverCmd()
+    $status : GameStatus()
   then
-    modify ( status ) { isGameOver = false };
-    delete( cmd ); 
+    delete( $gameOverCmd );
+    delete( $resetCmd );
+    modify ( $status ) { isGameOver = false };
 end
-
-rule "ステータス初期化_ゲームオーバー以外"
-  salience 10
-  when
-    cmd : ResetCommand()
-    not Winner()
-    status : GameStatus( isGameOver == false)
-  then
-    delete( cmd ); 
-end
-
-
-
-
