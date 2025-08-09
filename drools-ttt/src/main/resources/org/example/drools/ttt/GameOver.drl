@@ -5,8 +5,8 @@ rule "勝敗判定_行"
   when
     $status : GameStatus( isGameOver == false )
     $mark_1 : Mark()
-    $mark_2 : Mark(row == $mark_1.row, col != $mark_1.col, mark == $mark_1.mark)
-    $mark_3 : Mark(row == $mark_1.row, col != $mark_1.col, col != $mark_2.col, mark == $mark_1.mark)
+    $mark_2 : Mark( row == $mark_1.row, col != $mark_1.col, mark == $mark_1.mark )
+    $mark_3 : Mark( row == $mark_1.row, col != $mark_1.col, col != $mark_2.col, mark == $mark_1.mark )
   then
     modify ( $status ) { isGameOver = true };
     insert(new Winner($mark_1.mark()));
@@ -16,42 +16,42 @@ rule "勝敗判定_列"
   when
     $status : GameStatus( isGameOver == false )
     $mark_1 : Mark()
-    $mark_2 : Mark(col == $mark_1.col, row != $mark_1.row, mark == $mark_1.mark)
-    $mark_3 : Mark(col == $mark_1.col, row != $mark_1.row, row != $mark_2.row, mark == $mark_1.mark)
+    $mark_2 : Mark( col == $mark_1.col, row != $mark_1.row, mark == $mark_1.mark )
+    $mark_3 : Mark( col == $mark_1.col, row != $mark_1.row, row != $mark_2.row, mark == $mark_1.mark )
   then
     modify ( $status ) { isGameOver = true };
-    insert(new Winner($mark_1.mark()));
+    insert( new Winner($mark_1.mark()) );
 end
 
 rule "勝敗判定_斜め_1"
   when
     $status : GameStatus( isGameOver == false )
-    $mark_1 : Mark(row == 0, col == 0)
-    $mark_2 : Mark(row == 1, col == 1, mark() == $mark_1.mark())
-    $mark_3 : Mark(row == 2, col == 2, mark() == $mark_1.mark())
+    $mark_1 : Mark( row == 0, col == 0 )
+    Mark( row == 1, col == 1, mark() == $mark_1.mark() )
+    Mark( row == 2, col == 2, mark() == $mark_1.mark() )
   then
     modify ( $status ) { isGameOver = true };
-    insert(new Winner($mark_1.mark()));
+    insert( new Winner($mark_1.mark()) );
 end
 
 rule "勝敗判定_斜め_2"
   when
     $status : GameStatus( isGameOver == false )
-    $mark_1 : Mark(row == 0, col == 2)
-    $mark_2 : Mark(row == 1, col == 1, mark() == $mark_1.mark())
-    $mark_3 : Mark(row == 2, col == 0, mark() == $mark_1.mark())
+    $mark_1 : Mark( row == 0, col == 2 )
+    Mark( row == 1, col == 1, mark() == $mark_1.mark() )
+    Mark( row == 2, col == 0, mark() == $mark_1.mark() )
   then
     modify ( $status ) { isGameOver = true };
-    insert(new Winner($mark_1.mark()));
+    insert( new Winner($mark_1.mark()) );
 end
 
 rule "勝者決定時_UIにコマンド送信"
   when
-    winner : Winner()
+    $winner : Winner()
     GameStatus( isGameOver == true)
   then
-    insert(new LabelUpdCmd(winner.winnerMark() + " の勝ち！"));
-    insert(new GameOverCmd());
+    insert( new LabelUpdCmd($winner.winnerMark() + " の勝ち！") );
+    insert( new GameOverCmd() );
 end
 
 rule "引き分け時_UIにコマンド送信"
@@ -60,7 +60,7 @@ rule "引き分け時_UIにコマンド送信"
     accumulate( Mark();
         $count : count() ; $count == 9)
   then
-    insert(new LabelUpdCmd("引き分け！"));
     modify ( $status ) { isGameOver = true };
-    insert(new GameOverCmd());
+    insert( new LabelUpdCmd("引き分け！") );
+    insert( new GameOverCmd() );
 end
