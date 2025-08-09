@@ -1,6 +1,22 @@
 package org.example.drools.ttt;
 
 import javax.swing.JLabel;
+import org.example.drools.ttt.model.*;
+import org.example.drools.ttt.command.*;
+
+rule "プレイヤー"
+  when
+    not CurrentPlayer()
+  then
+    insert(new CurrentPlayer("◯"));
+end
+
+rule "ゲームステータス"
+  when
+    not GameStatus()
+  then
+    insert(new GameStatus());
+end
 
 rule "ボタン押下時に手番更新"
   when
