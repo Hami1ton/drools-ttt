@@ -26,10 +26,10 @@ public class GameUI extends JFrame {
 
     private JLabel statusLabel = new JLabel("◯ の番です", SwingConstants.CENTER);
 
-    private JButton[][] btns = new JButton[3][3];
+    private JButton[][] btns = new JButton[9][9];
 
     // 押下済のボタン記録用
-    private PlaceCmd[][] placeCmds = new PlaceCmd[3][3];
+    private PlaceCmd[][] placeCmds = new PlaceCmd[9][9];
 
     // 先行は「◯」
     private String currentMark = "◯";
@@ -41,7 +41,7 @@ public class GameUI extends JFrame {
 
         setTitle("マルバツゲーム");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(500, 550);
+        setSize(600, 650);
         setLocationRelativeTo(null);
 
         // ステータスラベル
@@ -55,15 +55,15 @@ public class GameUI extends JFrame {
         add(resetButton, BorderLayout.SOUTH);
 
         // 盤面
-        JPanel boardPanel = new JPanel(new GridLayout(3, 3));
+        JPanel boardPanel = new JPanel(new GridLayout(9, 9));
         boardPanel.setBackground(Color.WHITE);
         boardPanel.setBounds(0, 0, 400, 400);
         add(boardPanel, BorderLayout.CENTER);
 
         // ボタン
-        Font buttonFont = new Font("SansSerif", Font.BOLD, 48);
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
+        Font buttonFont = new Font("SansSerif", Font.BOLD, 18);
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
                 JButton btn = new JButton("");
                 btn.setFont(buttonFont);
                 btn.setFocusPainted(false);
@@ -135,7 +135,7 @@ public class GameUI extends JFrame {
                 btn.setText("");
             }
         }
-        this.placeCmds = new PlaceCmd[3][3];
+        this.placeCmds = new PlaceCmd[9][9];
         this.currentMark = "◯";
         this.gameOver = false;
 
