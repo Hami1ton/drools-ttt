@@ -29,6 +29,4 @@ public class Field {
     public JButton getBtn(){
         return btn;
     }
-
-
 }

@@ -14,6 +14,7 @@ import javax.swing.SwingConstants;
 import org.example.drools.ttt.command.PlaceCommand;
 import org.example.drools.ttt.command.ResetCommand;
 import org.example.drools.ttt.model.Field;
+import org.example.drools.ttt.model.Winner;
 import org.kie.api.event.rule.ObjectDeletedEvent;
 import org.kie.api.event.rule.ObjectInsertedEvent;
 import org.kie.api.event.rule.ObjectUpdatedEvent;
@@ -114,6 +115,7 @@ public class Game extends JFrame {
     }
 
     private void resetGame() {
+        
         this.statusLabel = new JLabel("◯ の番です", SwingConstants.CENTER);
         this.fields = new String[3][3];
         this.kSession.insert(new ResetCommand());

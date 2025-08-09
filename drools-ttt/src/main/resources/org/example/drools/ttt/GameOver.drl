@@ -64,7 +64,7 @@ rule "勝者決定時にラベルを更新する"
     GameStatus( isGameOver == true)
     statusLabel: JLabel()
   then
-    statusLabel.setText(winner.getMark() + " の勝ち！");
+    statusLabel.setText(winner.winnerMark() + " の勝ち！");
 end
 
 rule "引き分け"
