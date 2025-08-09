@@ -1,10 +1,5 @@
 package org.example.drools.ttt;
 
-import javax.swing.JButton;
-import java.awt.Color;
-import javax.swing.JLabel;
-
-
 rule "盤面更新データを削除"
   salience 20
   when
@@ -49,12 +44,12 @@ end
 rule "ステータス初期化_引き分け時"
   salience 10
   when
-    cmd : ResetCmd()
+    $cmd : ResetCmd()
     not Winner()
     $gameOverCmd : GameOverCmd()
     $status : GameStatus()
   then
     delete( $gameOverCmd );
-    delete( cmd );
+    delete( $cmd );
     modify ( $status ) { isGameOver = false };
 end
