@@ -1,0 +1,56 @@
+package org.example.drools.uttt;
+
+
+rule "盤面データを削除"
+  salience 20
+  when
+    ResetCmd()
+    $mark : Mark()
+  then
+    delete( $mark ); 
+end
+
+rule "ラベル更新データを削除"
+  salience 20
+  when
+    ResetCmd()
+    $labelUpdCmd : LabelUpdCmd()
+  then
+    delete( $labelUpdCmd ); 
+end
+
+rule "配置コマンドを削除"
+  salience 20
+  when
+    ResetCmd()
+    $placeCmd : PlaceCmd()
+  then
+    delete( $placeCmd ); 
+end
+
+rule "ステータス初期化_勝敗確定時"
+  salience 10
+  when
+    $resetCmd : ResetCmd()
+    $winner : Winner()
+    $gameOverCmd : GameOverCmd()
+    $status : GameStatus( isGameOver == true)
+  then
+    delete( $winner );
+    delete( $gameOverCmd );
+    delete( $resetCmd ); 
+    modify ( $status ) { isGameOver = false };
+end
+
+rule "ステータス初期化_引き分け時"
+  salience 10
+  when
+    $resetCmd : ResetCmd()
+    not Winner()
+    $gameOverCmd : GameOverCmd()
+    $status : GameStatus()
+  then
+    delete( $gameOverCmd );
+    delete( $resetCmd );
+    modify ( $status ) { isGameOver = false };
+end
