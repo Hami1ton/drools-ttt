@@ -9,6 +9,7 @@ rule "ローカル領域の勝敗判定_行"
     Mark( localRow == $mark_1.localRow, localCol != $mark_1.localCol, localCol != $mark_2.localCol, globalRow == $mark_1.globalRow, globalCol == $mark_1.globalCol, mark == $mark_1.mark )
   then
     insert( new GlobalField($mark_1.globalRow, $mark_1.globalCol, $mark_1.mark) );
+    insert( new OverlayCmd($mark_1.globalRow, $mark_1.globalCol, $mark_1.mark) );
 end
 
 rule "ローカル領域の勝敗判定_列"
@@ -19,6 +20,7 @@ rule "ローカル領域の勝敗判定_列"
     Mark( localRow != $mark_1.localRow, localCol == $mark_1.localCol, localRow != $mark_2.localRow, globalRow == $mark_1.globalRow, globalCol == $mark_1.globalCol, mark == $mark_1.mark )
   then
     insert( new GlobalField($mark_1.globalRow, $mark_1.globalCol, $mark_1.mark) );
+    insert( new OverlayCmd($mark_1.globalRow, $mark_1.globalCol, $mark_1.mark) );
 end
 
 rule "ローカル領域の勝敗判定_斜め_1"
@@ -29,6 +31,7 @@ rule "ローカル領域の勝敗判定_斜め_1"
     Mark( localRow == 2, localCol == 2, globalRow == $mark_1.globalRow, globalCol == $mark_1.globalCol, mark == $mark_1.mark )
   then
     insert( new GlobalField($mark_1.globalRow, $mark_1.globalCol, $mark_1.mark) );
+    insert( new OverlayCmd($mark_1.globalRow, $mark_1.globalCol, $mark_1.mark) );
 end
 
 rule "ローカル領域の勝敗判定_斜め_2"
@@ -39,6 +42,7 @@ rule "ローカル領域の勝敗判定_斜め_2"
     Mark( localRow == 2, localCol == 0, globalRow == $mark_1.globalRow, globalCol == $mark_1.globalCol, mark == $mark_1.mark )
   then
     insert( new GlobalField($mark_1.globalRow, $mark_1.globalCol, $mark_1.mark) );
+    insert( new OverlayCmd($mark_1.globalRow, $mark_1.globalCol, $mark_1.mark) );
 end
 
 

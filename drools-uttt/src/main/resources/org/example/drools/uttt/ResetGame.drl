@@ -19,6 +19,15 @@ rule "グローバル盤面データを削除"
     delete( $gf );
 end
 
+rule "オーバーレイ表示コマンド削除"
+  salience 20
+  when
+    ResetCmd()
+    $oc : OverlayCmd()
+  then
+    delete( $oc );
+end
+
 rule "ラベル更新データを削除"
   salience 20
   when

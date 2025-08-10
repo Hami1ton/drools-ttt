@@ -8,11 +8,14 @@ import java.awt.GridLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-import org.example.drools.uttt.incmd.*;
-import org.example.drools.uttt.outcmd.*;
+import org.example.drools.uttt.incmd.PlaceCmd;
+import org.example.drools.uttt.incmd.ResetCmd;
+import org.example.drools.uttt.outcmd.LabelUpdCmd;
+import org.example.drools.uttt.outcmd.OverlayCmd;
 import org.kie.api.event.rule.ObjectDeletedEvent;
 import org.kie.api.event.rule.ObjectInsertedEvent;
 import org.kie.api.event.rule.ObjectUpdatedEvent;
@@ -36,6 +39,10 @@ public class GameUI extends JFrame {
 
     private boolean gameOver = false;
 
+    // 巨大◯や✕を描画するパネル
+    private OverlayPanel[][] overlayPanels = new OverlayPanel[3][3];
+
+
     public GameUI(KieSession kSession) {
         this.kSession = kSession;
 
@@ -57,11 +64,11 @@ public class GameUI extends JFrame {
         // 盤面
         JPanel boardPanel = new JPanel(new GridLayout(9, 9));
         boardPanel.setBackground(Color.WHITE);
-        boardPanel.setBounds(0, 0, 400, 400);
+        boardPanel.setBounds(0, 0, 450, 450);
         add(boardPanel, BorderLayout.CENTER);
 
         // ボタン
-        Font buttonFont = new Font("SansSerif", Font.BOLD, 18);
+        Font buttonFont = new Font("SansSerif", Font.BOLD, 15);
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
                 JButton btn = new JButton("");
@@ -74,6 +81,23 @@ public class GameUI extends JFrame {
             }
         }
 
+        // 盤面の上にオーバーレイを重ねるためのレイヤードペイン
+        JLayeredPane layeredPane = new JLayeredPane();
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                OverlayPanel overlayPanel = new OverlayPanel();
+
+                overlayPanel.setBounds(i * 150, j * 150, 150, 150);
+                overlayPanel.setOpaque(false);
+                overlayPanel.setVisible(false);
+                layeredPane.add(overlayPanel, JLayeredPane.PALETTE_LAYER);
+                add(layeredPane, BorderLayout.CENTER);
+                this.overlayPanels[i][j] = overlayPanel;
+            }
+        }
+        layeredPane.add(boardPanel, JLayeredPane.DEFAULT_LAYER);
+        
+        // out command受信時の処理
         addRuleEventListener(this.kSession);
 
         setVisible(true);
@@ -89,11 +113,15 @@ public class GameUI extends JFrame {
                 Object obj = event.getObject();
 
                 if (obj.getClass().getName().equals("org.example.drools.uttt.outcmd.LabelUpdCmd")) {
-                    statusLabel.setText(((LabelUpdCmd)obj).label());
+                    statusLabel.setText(((LabelUpdCmd) obj).label());
                 }
-
                 if (obj.getClass().getName().equals("org.example.drools.uttt.outcmd.GameOverCmd")) {
                     gameOver = true;
+                }
+                if (obj.getClass().getName().equals("org.example.drools.uttt.outcmd.OverlayCmd")) {
+                    var cmd = (OverlayCmd) obj;
+                    overlayPanels[cmd.row()][cmd.col()].setWinner(cmd.mark());
+                    overlayPanels[cmd.row()][cmd.col()].setVisible(true);
                 }
                 // System.out.println("Fact inserted: " + obj.getClass());
             }
@@ -133,6 +161,11 @@ public class GameUI extends JFrame {
         for (JButton[] btns : this.btns) {
             for (JButton btn: btns) {
                 btn.setText("");
+            }
+        }
+        for (OverlayPanel[] panels : this.overlayPanels) {
+            for (OverlayPanel panel: panels) {
+                panel.setVisible(false);
             }
         }
         this.placeCmds = new PlaceCmd[9][9];
