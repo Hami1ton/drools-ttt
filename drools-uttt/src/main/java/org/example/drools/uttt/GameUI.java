@@ -139,10 +139,13 @@ public class GameUI extends JFrame {
     }
 
     private void place(int row, int col) {
-        if (gameOver) {
+        if (this.gameOver) {
             return;
         }
-
+        if (this.overlayPanels[row / 3][col / 3].isVisible()) {
+            // 勝敗確定したGrobalFieldにはマークできない
+            return;
+        }
         if (this.placeCmds[row][col] == null) {
             this.btns[row][col].setText(this.currentMark);
 
@@ -176,6 +179,7 @@ public class GameUI extends JFrame {
         this.currentMark = "◯";
         this.gameOver = false;
 
+        // ルールエンジンにコマンド投入
         this.kSession.insert(new ResetCmd());
     }
 }
