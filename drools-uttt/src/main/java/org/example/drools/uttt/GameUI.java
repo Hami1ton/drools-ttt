@@ -48,7 +48,7 @@ public class GameUI extends JFrame {
 
         setTitle("マルバツゲーム");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(600, 650);
+        setSize(550, 550);
         setLocationRelativeTo(null);
 
         // ステータスラベル

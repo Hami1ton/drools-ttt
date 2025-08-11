@@ -4,7 +4,7 @@ package org.example.drools.uttt;
 rule "勝敗判定_行"
   when
     $status : GameStatus( isGameOver == false )
-    $gf_1 : GlobalField()
+    $gf_1 : GlobalField( mark != "" )
     $gf_2 : GlobalField( row == $gf_1.row, col != $gf_1.col, mark == $gf_1.mark )
     GlobalField( row == $gf_1.row, col != $gf_1.col, col != $gf_2.col, mark == $gf_1.mark )
   then
@@ -15,7 +15,7 @@ end
 rule "勝敗判定_列"
   when
     $status : GameStatus( isGameOver == false )
-    $gf_1 : GlobalField()
+    $gf_1 : GlobalField( mark != "" )
     $gf_2 : GlobalField( col == $gf_1.col, row != $gf_1.row, mark == $gf_1.mark )
     GlobalField( col == $gf_1.col, row != $gf_1.row, row != $gf_2.row, mark == $gf_1.mark )
   then
@@ -26,7 +26,7 @@ end
 rule "勝敗判定_斜め_1"
   when
     $status : GameStatus( isGameOver == false )
-    $gf_1 : GlobalField( row == 0, col == 0 )
+    $gf_1 : GlobalField( row == 0, col == 0, mark != "" )
     GlobalField( row == 1, col == 1, mark == $gf_1.mark )
     GlobalField( row == 2, col == 2, mark == $gf_1.mark )
   then
@@ -37,7 +37,7 @@ end
 rule "勝敗判定_斜め_2"
   when
     $status : GameStatus( isGameOver == false )
-    $gf_1 : GlobalField( row == 0, col == 2 )
+    $gf_1 : GlobalField( row == 0, col == 2, mark != "" )
     GlobalField( row == 1, col == 1, mark == $gf_1.mark )
     GlobalField( row == 2, col == 0, mark == $gf_1.mark )
   then

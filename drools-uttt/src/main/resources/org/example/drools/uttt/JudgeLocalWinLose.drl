@@ -49,4 +49,15 @@ rule "ローカル領域の勝敗判定_斜め_2"
     insert( new OverlayCmd($mark_1.globalRow, $mark_1.globalCol, $mark_1.mark) );
 end
 
+rule "ローカル領域の引き分け判定"
+  when
+    $status : GameStatus( isGameOver == false )
+    $mark : Mark()
+    accumulate( Mark(globalRow == $mark.globalRow, globalCol == $mark.globalCol);
+        $count : count() ; $count == 9 )
+    not GlobalField( row == $mark.globalRow, col == $mark.globalCol )
+  then
+    insert( new GlobalField($mark.globalRow, $mark.globalCol, "") );
+    insert( new OverlayCmd($mark.globalRow, $mark.globalCol, "") );
+end
 
