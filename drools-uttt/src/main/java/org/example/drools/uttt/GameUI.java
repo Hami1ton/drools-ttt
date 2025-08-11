@@ -110,19 +110,17 @@ public class GameUI extends JFrame {
             public void objectInserted(ObjectInsertedEvent event) {
                 Object obj = event.getObject();
 
-                if (obj.getClass().getName().equals("org.example.drools.uttt.outcmd.LabelUpdCmd")) {
+                if (obj instanceof LabelUpdCmd) {
                     statusLabel.setText(((LabelUpdCmd) obj).label());
                 }
-                if (obj.getClass().getName().equals("org.example.drools.uttt.outcmd.GameOverCmd")) {
+                if (obj instanceof GameOverCmd) {
                     gameOver = true;
                 }
-                if (obj.getClass().getName().equals("org.example.drools.uttt.outcmd.OverlayCmd")) {
-                    var cmd = (OverlayCmd) obj;
+                if (obj instanceof OverlayCmd cmd) {
                     overlayPanels[cmd.row()][cmd.col()].setWinner(cmd.mark());
                     overlayPanels[cmd.row()][cmd.col()].setVisible(true);
                 }
-                if (obj.getClass().getName().equals("org.example.drools.uttt.outcmd.FieldChangeCmd")) {
-                    var cmd = (FieldChangeCmd) obj;
+                if (obj instanceof FieldChangeCmd cmd) {
                     if(overlayPanels[cmd.localRow()][cmd.localCol()].isVisible()) {
                         // 全ボタンを押下可能にする
                         for (JButton[] btns : btns) {
