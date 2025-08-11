@@ -44,7 +44,7 @@ public class GameUI extends JFrame {
     public GameUI(KieSession kSession) {
         this.kSession = kSession;
 
-        setTitle("マルバツゲーム");
+        setTitle("スーパー マルバツゲーム");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(550, 550);
         setLocationRelativeTo(null);
@@ -112,15 +112,15 @@ public class GameUI extends JFrame {
 
                 if (obj instanceof LabelUpdCmd) {
                     statusLabel.setText(((LabelUpdCmd) obj).label());
-                }
-                if (obj instanceof GameOverCmd) {
+
+                } else if (obj instanceof GameOverCmd) {
                     gameOver = true;
-                }
-                if (obj instanceof OverlayCmd cmd) {
+
+                } else if (obj instanceof OverlayCmd cmd) {
                     overlayPanels[cmd.row()][cmd.col()].setWinner(cmd.mark());
                     overlayPanels[cmd.row()][cmd.col()].setVisible(true);
-                }
-                if (obj instanceof FieldChangeCmd cmd) {
+
+                } else if (obj instanceof FieldChangeCmd cmd) {
                     if(overlayPanels[cmd.localRow()][cmd.localCol()].isVisible()) {
                         // 全ボタンを押下可能にする
                         for (JButton[] btns : btns) {
@@ -130,11 +130,11 @@ public class GameUI extends JFrame {
                         }
                         return;
                     }
-                    // FieldChangeCmdで指定した領域のみ押下可能にする
                     for (int i = 0; i < 9; i++) {
                         for (int j = 0; j < 9; j++) {
                             btns[i][j].setEnabled(false);
                             if (i / 3 == cmd.localRow() && j / 3 == cmd.localCol()) {
+                                // FieldChangeCmdで指定した領域のみ押下可能にする
                                 btns[i][j].setEnabled(true);
                             } 
                         }
