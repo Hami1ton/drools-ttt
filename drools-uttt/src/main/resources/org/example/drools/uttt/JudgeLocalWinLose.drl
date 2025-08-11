@@ -1,0 +1,63 @@
+package org.example.drools.uttt;
+
+
+rule "ローカル領域の勝敗判定_行"
+  when
+    $status : GameStatus( isGameOver == false )
+    $mark_1 : Mark()
+    $mark_2 : Mark( localRow == $mark_1.localRow, localCol != $mark_1.localCol, globalRow == $mark_1.globalRow, globalCol == $mark_1.globalCol, mark == $mark_1.mark )
+    Mark( localRow == $mark_1.localRow, localCol != $mark_1.localCol, localCol != $mark_2.localCol, globalRow == $mark_1.globalRow, globalCol == $mark_1.globalCol, mark == $mark_1.mark )
+    not GlobalField( row == $mark_1.globalRow, col == $mark_1.globalCol )
+  then
+    insert( new GlobalField($mark_1.globalRow, $mark_1.globalCol, $mark_1.mark) );
+    insert( new OverlayCmd($mark_1.globalRow, $mark_1.globalCol, $mark_1.mark) );
+end
+
+rule "ローカル領域の勝敗判定_列"
+  when
+    $status : GameStatus( isGameOver == false )
+    $mark_1 : Mark()
+    $mark_2 : Mark( localRow != $mark_1.localRow, localCol == $mark_1.localCol, globalRow == $mark_1.globalRow, globalCol == $mark_1.globalCol, mark == $mark_1.mark )
+    Mark( localRow != $mark_1.localRow, localCol == $mark_1.localCol, localRow != $mark_2.localRow, globalRow == $mark_1.globalRow, globalCol == $mark_1.globalCol, mark == $mark_1.mark )
+    not GlobalField( row == $mark_1.globalRow, col == $mark_1.globalCol )
+  then
+    insert( new GlobalField($mark_1.globalRow, $mark_1.globalCol, $mark_1.mark) );
+    insert( new OverlayCmd($mark_1.globalRow, $mark_1.globalCol, $mark_1.mark) );
+end
+
+rule "ローカル領域の勝敗判定_斜め_1"
+  when
+    $status : GameStatus( isGameOver == false )
+    $mark_1 : Mark( localRow == 0, localCol == 0 )
+    Mark( localRow == 1, localCol == 1, globalRow == $mark_1.globalRow, globalCol == $mark_1.globalCol, mark == $mark_1.mark )
+    Mark( localRow == 2, localCol == 2, globalRow == $mark_1.globalRow, globalCol == $mark_1.globalCol, mark == $mark_1.mark )
+    not GlobalField( row == $mark_1.globalRow, col == $mark_1.globalCol )
+  then
+    insert( new GlobalField($mark_1.globalRow, $mark_1.globalCol, $mark_1.mark) );
+    insert( new OverlayCmd($mark_1.globalRow, $mark_1.globalCol, $mark_1.mark) );
+end
+
+rule "ローカル領域の勝敗判定_斜め_2"
+  when
+    $status : GameStatus( isGameOver == false )
+    $mark_1 : Mark( localRow == 0, localCol == 2 )
+    Mark( localRow == 1, localCol == 1, globalRow == $mark_1.globalRow, globalCol == $mark_1.globalCol, mark == $mark_1.mark )
+    Mark( localRow == 2, localCol == 0, globalRow == $mark_1.globalRow, globalCol == $mark_1.globalCol, mark == $mark_1.mark )
+    not GlobalField( row == $mark_1.globalRow, col == $mark_1.globalCol )
+  then
+    insert( new GlobalField($mark_1.globalRow, $mark_1.globalCol, $mark_1.mark) );
+    insert( new OverlayCmd($mark_1.globalRow, $mark_1.globalCol, $mark_1.mark) );
+end
+
+rule "ローカル領域の引き分け判定"
+  when
+    $status : GameStatus( isGameOver == false )
+    $mark : Mark()
+    accumulate( Mark(globalRow == $mark.globalRow, globalCol == $mark.globalCol);
+        $count : count() ; $count == 9 )
+    not GlobalField( row == $mark.globalRow, col == $mark.globalCol )
+  then
+    insert( new GlobalField($mark.globalRow, $mark.globalCol, "") );
+    insert( new OverlayCmd($mark.globalRow, $mark.globalCol, "") );
+end
+

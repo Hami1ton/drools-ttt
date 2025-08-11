@@ -31,3 +31,12 @@ rule "✕の手番_マークを生成"
     insert( new Mark($cmd.row(), $cmd.col(), $cmd.mark()) );
     insert( new LabelUpdCmd("◯ の番です") );
 end
+
+rule "次に操作できるフィールドを判定"
+  when
+    GameStatus( isGameOver == false )
+    $mark : Mark()
+  then
+    insert( new FieldChangeCmd($mark.localRow, $mark.localCol) );
+end
+
