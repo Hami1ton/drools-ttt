@@ -87,7 +87,7 @@ public class GameUI extends JFrame {
             for (int j = 0; j < 3; j++) {
                 OverlayPanel overlayPanel = new OverlayPanel();
 
-                overlayPanel.setBounds(i * 150, j * 150, 150, 150);
+                overlayPanel.setBounds(j * 150, i * 150, 150, 150);
                 overlayPanel.setOpaque(false);
                 overlayPanel.setVisible(false);
                 layeredPane.add(overlayPanel, JLayeredPane.PALETTE_LAYER);
@@ -120,8 +120,12 @@ public class GameUI extends JFrame {
                 }
                 if (obj.getClass().getName().equals("org.example.drools.uttt.outcmd.OverlayCmd")) {
                     var cmd = (OverlayCmd) obj;
+                    System.out.println(cmd);
                     overlayPanels[cmd.row()][cmd.col()].setWinner(cmd.mark());
                     overlayPanels[cmd.row()][cmd.col()].setVisible(true);
+                }
+                if (obj.getClass().getName().equals("org.example.drools.uttt.outcmd.ZZZZ")) {
+                    btns[1][1].setEnabled(false);
                 }
                 // System.out.println("Fact inserted: " + obj.getClass());
             }
