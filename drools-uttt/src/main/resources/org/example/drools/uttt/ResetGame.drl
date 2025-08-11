@@ -1,7 +1,7 @@
 package org.example.drools.uttt;
 
 
-rule "盤面データを削除"
+rule "盤面に記入したマークデータを削除"
   salience 20
   when
     ResetCmd()
@@ -28,7 +28,7 @@ rule "オーバーレイ表示コマンド削除"
     delete( $oc );
 end
 
-rule "ラベル更新データを削除"
+rule "ラベル更新コマンドを削除"
   salience 20
   when
     ResetCmd()
