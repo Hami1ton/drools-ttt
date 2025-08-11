@@ -12,10 +12,8 @@ import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-import org.example.drools.uttt.incmd.PlaceCmd;
-import org.example.drools.uttt.incmd.ResetCmd;
-import org.example.drools.uttt.outcmd.LabelUpdCmd;
-import org.example.drools.uttt.outcmd.OverlayCmd;
+import org.example.drools.uttt.incmd.*;
+import org.example.drools.uttt.outcmd.*;
 import org.kie.api.event.rule.ObjectDeletedEvent;
 import org.kie.api.event.rule.ObjectInsertedEvent;
 import org.kie.api.event.rule.ObjectUpdatedEvent;
@@ -120,12 +118,29 @@ public class GameUI extends JFrame {
                 }
                 if (obj.getClass().getName().equals("org.example.drools.uttt.outcmd.OverlayCmd")) {
                     var cmd = (OverlayCmd) obj;
-                    System.out.println(cmd);
                     overlayPanels[cmd.row()][cmd.col()].setWinner(cmd.mark());
                     overlayPanels[cmd.row()][cmd.col()].setVisible(true);
                 }
-                if (obj.getClass().getName().equals("org.example.drools.uttt.outcmd.ZZZZ")) {
-                    btns[1][1].setEnabled(false);
+                if (obj.getClass().getName().equals("org.example.drools.uttt.outcmd.FieldChangeCmd")) {
+                    var cmd = (FieldChangeCmd) obj;
+                    if(overlayPanels[cmd.localRow()][cmd.localCol()].isVisible()) {
+                        // 全ボタンを押下可能にする
+                        for (JButton[] btns : btns) {
+                            for (JButton btn: btns) {
+                                btn.setEnabled(true);
+                            }
+                        }
+                        return;
+                    }
+                    // FieldChangeCmdで指定した領域のみ押下可能にする
+                    for (int i = 0; i < 9; i++) {
+                        for (int j = 0; j < 9; j++) {
+                            btns[i][j].setEnabled(false);
+                            if (i / 3 == cmd.localRow() & j / 3 == cmd.localCol()) {
+                                btns[i][j].setEnabled(true);
+                            } 
+                        }
+                    }
                 }
                 // System.out.println("Fact inserted: " + obj.getClass());
             }
@@ -168,6 +183,7 @@ public class GameUI extends JFrame {
         for (JButton[] btns : this.btns) {
             for (JButton btn: btns) {
                 btn.setText("");
+                btn.setEnabled(true);
             }
         }
         for (OverlayPanel[] panels : this.overlayPanels) {

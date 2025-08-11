@@ -46,6 +46,15 @@ rule "配置コマンドを削除"
     delete( $placeCmd );
 end
 
+rule "フィールド変更コマンドを削除"
+  salience 20
+  when
+    ResetCmd()
+    $fieldChangeCmd : FieldChangeCmd()
+  then
+    delete( $fieldChangeCmd );
+end
+
 rule "ステータス初期化_勝敗確定時"
   salience 10
   when
