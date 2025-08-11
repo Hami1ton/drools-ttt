@@ -134,7 +134,7 @@ public class GameUI extends JFrame {
                     for (int i = 0; i < 9; i++) {
                         for (int j = 0; j < 9; j++) {
                             btns[i][j].setEnabled(false);
-                            if (i / 3 == cmd.localRow() & j / 3 == cmd.localCol()) {
+                            if (i / 3 == cmd.localRow() && j / 3 == cmd.localCol()) {
                                 btns[i][j].setEnabled(true);
                             } 
                         }
