@@ -32,7 +32,7 @@ rule "✕の手番_マークを生成"
     insert( new LabelUpdCmd("◯ の番です") );
 end
 
-rule "次に操作できるフィールドを判定"
+rule "次に操作できるフィールドを判定するためのコマンド生成"
   when
     GameStatus( isGameOver == false )
     $mark : Mark()
