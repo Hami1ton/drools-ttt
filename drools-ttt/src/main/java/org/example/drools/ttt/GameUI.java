@@ -24,15 +24,15 @@ public class GameUI extends JFrame {
 
     private KieSession kSession;
 
-    private JLabel statusLabel = new JLabel("◯ の番です", SwingConstants.CENTER);
+    private JLabel statusLabel = new JLabel("✕ の番です", SwingConstants.CENTER);
 
     private JButton[][] btns = new JButton[3][3];
 
     // 押下済のボタン記録用
     private PlaceCmd[][] placeCmds = new PlaceCmd[3][3];
 
-    // 先行は「◯」
-    private String currentMark = "◯";
+    // 先攻は「✕」
+    private String currentMark = "✕";
 
     private boolean gameOver = false;
 
@@ -129,14 +129,14 @@ public class GameUI extends JFrame {
     }
 
     private void resetGame() {
-        this.statusLabel.setText("◯ の番です");
+        this.statusLabel.setText("✕ の番です");
         for (JButton[] btns : this.btns) {
             for (JButton btn: btns) {
                 btn.setText("");
             }
         }
         this.placeCmds = new PlaceCmd[3][3];
-        this.currentMark = "◯";
+        this.currentMark = "✕";
         this.gameOver = false;
 
         this.kSession.insert(new ResetCmd());
