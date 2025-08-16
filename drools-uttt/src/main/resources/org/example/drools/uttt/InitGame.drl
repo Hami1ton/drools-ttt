@@ -1,0 +1,13 @@
+package org.example.drools.uttt;
+
+import org.example.drools.uttt.model.*;
+import org.example.drools.uttt.incmd.*;
+import org.example.drools.uttt.outcmd.*;
+
+
+rule "ゲームステータスがなければ作成"
+  when
+    not GameStatus()
+  then
+    insert( new GameStatus() );
+end
