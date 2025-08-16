@@ -1,4 +1,4 @@
-# drools-uttt(ultimate tic-tac-toe)
+# drools-uttt(Ultimate Tic-Tac-Toe)
 
 ## env
 

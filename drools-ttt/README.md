@@ -1,4 +1,4 @@
-# drools-ttt(tic-tac-toe)
+# drools-ttt(Tic-Tac-Toe)
 
 ## env 
 
@@ -16,3 +16,6 @@ flowchart TD
     B -->|Out Command| A
 ```
 
+## how to play
+
+Execute the main function to display the game UI.
