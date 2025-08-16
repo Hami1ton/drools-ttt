@@ -17,7 +17,7 @@ public class OverlayPanel extends JPanel {
     public OverlayPanel(int x, int y, int width, int height) {
         super();
 
-        this.setBounds(x, y, 150, 150);
+        this.setBounds(x, y, width, height);
         this.setOpaque(false);
         this.setVisible(true);
         this.setBorder(new LineBorder(Color.RED, 2, true));
