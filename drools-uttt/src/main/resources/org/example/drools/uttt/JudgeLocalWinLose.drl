@@ -37,7 +37,7 @@ rule "ローカル領域の勝敗判定_斜め_左上から右下がそろう"
     insert( new OverlayCmd($mark.globalRow, $mark.globalCol, $mark.mark) );
 end
 
-rule "ローカル領域の勝敗判定_斜め_2"
+rule "ローカル領域の勝敗判定_斜め_右上から左下がそろう"
   when
     $status : GameStatus( isGameOver == false )
     $mark : Mark( localRow == 0, localCol == 2 )
