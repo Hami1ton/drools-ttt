@@ -110,8 +110,8 @@ public class GameUI extends JFrame {
             public void objectInserted(ObjectInsertedEvent event) {
                 Object obj = event.getObject();
 
-                if (obj instanceof LabelUpdCmd) {
-                    statusLabel.setText(((LabelUpdCmd) obj).label());
+                if (obj instanceof LabelUpdCmd cmd) {
+                    statusLabel.setText(cmd.label());
 
                 } else if (obj instanceof GameOverCmd) {
                     gameOver = true;
@@ -122,12 +122,8 @@ public class GameUI extends JFrame {
 
                 } else if (obj instanceof FieldChangeCmd cmd) {
                     if(overlayPanels[cmd.localRow()][cmd.localCol()].isVisible()) {
-                        // 全ボタンを押下可能にする
-                        for (JButton[] btns : btns) {
-                            for (JButton btn: btns) {
-                                btn.setEnabled(true);
-                            }
-                        }
+                        // 移動先が勝敗確定済なら、全ボタンを押下可能にする
+                        resetButtons(false);
                         return;
                     }
                     for (int i = 0; i < 9; i++) {
@@ -136,7 +132,7 @@ public class GameUI extends JFrame {
                             if (i / 3 == cmd.localRow() && j / 3 == cmd.localCol()) {
                                 // FieldChangeCmdで指定した領域のみ押下可能にする
                                 btns[i][j].setEnabled(true);
-                            } 
+                            }
                         }
                     }
                 }
@@ -156,7 +152,7 @@ public class GameUI extends JFrame {
             return;
         }
         if (this.overlayPanels[row / 3][col / 3].isVisible()) {
-            // 勝敗確定したGrobalFieldにはマークできない
+            // 勝敗確定したGrobalFieldのボタンは押下できない
             return;
         }
         if (this.placeCmds[row][col] == null) {
@@ -178,12 +174,7 @@ public class GameUI extends JFrame {
 
     private void resetGame() {
         this.statusLabel.setText("◯ の番です");
-        for (JButton[] btns : this.btns) {
-            for (JButton btn: btns) {
-                btn.setText("");
-                btn.setEnabled(true);
-            }
-        }
+        resetButtons(true);
         for (OverlayPanel[] panels : this.overlayPanels) {
             for (OverlayPanel panel: panels) {
                 panel.setVisible(false);
@@ -195,5 +186,16 @@ public class GameUI extends JFrame {
 
         // ルールエンジンにコマンド投入
         this.kSession.insert(new ResetCmd());
+    }
+
+    private void resetButtons(boolean shouldDeleteLabel) {
+        for (JButton[] btns : this.btns) {
+            for (JButton btn: btns) {
+                if (shouldDeleteLabel) {
+                    btn.setText("");
+                }
+                btn.setEnabled(true);
+            }
+        }
     }
 }
