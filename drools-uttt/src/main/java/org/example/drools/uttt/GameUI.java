@@ -83,11 +83,8 @@ public class GameUI extends JFrame {
         JLayeredPane layeredPane = new JLayeredPane();
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                OverlayPanel overlayPanel = new OverlayPanel();
+                OverlayPanel overlayPanel = new OverlayPanel(j * 150, i * 150, 150, 150);
 
-                overlayPanel.setBounds(j * 150, i * 150, 150, 150);
-                overlayPanel.setOpaque(false);
-                overlayPanel.setVisible(false);
                 layeredPane.add(overlayPanel, JLayeredPane.PALETTE_LAYER);
                 add(layeredPane, BorderLayout.CENTER);
                 this.overlayPanels[i][j] = overlayPanel;
@@ -118,10 +115,10 @@ public class GameUI extends JFrame {
 
                 } else if (obj instanceof OverlayCmd cmd) {
                     overlayPanels[cmd.row()][cmd.col()].setWinner(cmd.mark());
-                    overlayPanels[cmd.row()][cmd.col()].setVisible(true);
+                    overlayPanels[cmd.row()][cmd.col()].fill();
 
                 } else if (obj instanceof FieldChangeCmd cmd) {
-                    if(overlayPanels[cmd.localRow()][cmd.localCol()].isVisible()) {
+                    if(overlayPanels[cmd.localRow()][cmd.localCol()].isFilled()) {
                         // 移動先が勝敗確定済なら、全ボタンを押下可能にする
                         resetButtons(false);
                         return;
@@ -151,7 +148,7 @@ public class GameUI extends JFrame {
         if (this.gameOver) {
             return;
         }
-        if (this.overlayPanels[row / 3][col / 3].isVisible()) {
+        if (this.overlayPanels[row / 3][col / 3].isFilled()) {
             // 勝敗確定したGrobalFieldのボタンは押下できない
             return;
         }
@@ -177,7 +174,7 @@ public class GameUI extends JFrame {
         resetButtons(true);
         for (OverlayPanel[] panels : this.overlayPanels) {
             for (OverlayPanel panel: panels) {
-                panel.setVisible(false);
+                panel.reset();
             }
         }
         this.placeCmds = new PlaceCmd[9][9];
