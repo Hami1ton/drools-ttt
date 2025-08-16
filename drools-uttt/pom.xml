@@ -6,7 +6,7 @@
   <artifactId>drools-uttt</artifactId>
   <version>1.0.0-SNAPSHOT</version>
 
-  <name>rulebased-uttt</name>
+  <name>drools-uttt</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
