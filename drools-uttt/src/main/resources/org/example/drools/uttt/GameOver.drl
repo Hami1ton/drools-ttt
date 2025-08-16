@@ -1,48 +1,48 @@
 package org.example.drools.uttt;
 
 
-rule "勝敗判定_行"
+rule "勝敗判定_行の記号がそろう"
   when
     $status : GameStatus( isGameOver == false )
-    $gf_1 : GlobalField( mark != "" )
-    $gf_2 : GlobalField( row == $gf_1.row, col != $gf_1.col, mark == $gf_1.mark )
-    GlobalField( row == $gf_1.row, col != $gf_1.col, col != $gf_2.col, mark == $gf_1.mark )
+    $gf : GlobalField( mark != "" )
+    accumulate( GlobalField( row == $gf.row, mark == $gf.mark );
+        $count : count() ; $count == 3 )
   then
     modify ( $status ) { isGameOver = true };
-    insert( new Winner($gf_1.mark()) );
+    insert( new Winner($gf.mark()) );
 end
 
-rule "勝敗判定_列"
+rule "勝敗判定_列の記号がそろう"
   when
     $status : GameStatus( isGameOver == false )
-    $gf_1 : GlobalField( mark != "" )
-    $gf_2 : GlobalField( col == $gf_1.col, row != $gf_1.row, mark == $gf_1.mark )
-    GlobalField( col == $gf_1.col, row != $gf_1.row, row != $gf_2.row, mark == $gf_1.mark )
+    $gf : GlobalField( mark != "" )
+    accumulate( GlobalField( col == $gf.col, mark == $gf.mark );
+        $count : count() ; $count == 3 )
   then
     modify ( $status ) { isGameOver = true };
-    insert( new Winner($gf_1.mark()) );
+    insert( new Winner($gf.mark()) );
 end
 
-rule "勝敗判定_斜め_1"
+rule "勝敗判定_斜め_左上から右下がそろう"
   when
     $status : GameStatus( isGameOver == false )
-    $gf_1 : GlobalField( row == 0, col == 0, mark != "" )
-    GlobalField( row == 1, col == 1, mark == $gf_1.mark )
-    GlobalField( row == 2, col == 2, mark == $gf_1.mark )
+    $gf : GlobalField( row == 0, col == 0, mark != "" )
+    GlobalField( row == 1, col == 1, mark == $gf.mark )
+    GlobalField( row == 2, col == 2, mark == $gf.mark )
   then
     modify ( $status ) { isGameOver = true };
-    insert( new Winner($gf_1.mark()) );
+    insert( new Winner($gf.mark()) );
 end
 
-rule "勝敗判定_斜め_2"
+rule "勝敗判定_斜め_右上から左下がそろう"
   when
     $status : GameStatus( isGameOver == false )
-    $gf_1 : GlobalField( row == 0, col == 2, mark != "" )
-    GlobalField( row == 1, col == 1, mark == $gf_1.mark )
-    GlobalField( row == 2, col == 0, mark == $gf_1.mark )
+    $gf : GlobalField( row == 0, col == 2, mark != "" )
+    GlobalField( row == 1, col == 1, mark == $gf.mark )
+    GlobalField( row == 2, col == 0, mark == $gf.mark )
   then
     modify ( $status ) { isGameOver = true };
-    insert( new Winner($gf_1.mark()) );
+    insert( new Winner($gf.mark()) );
 end
 
 rule "勝者決定時_UIにコマンド送信"
