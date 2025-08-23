@@ -173,8 +173,8 @@ public class GameUI extends JFrame {
     private void resetGame() {
         this.statusLabel.setText("✕ の番です");
         resetButtons(true);
-        for (OverlayPanel[] panels : this.overlayPanels) {
-            for (OverlayPanel panel: panels) {
+        for (OverlayPanel[] panelArr : this.overlayPanels) {
+            for (OverlayPanel panel: panelArr) {
                 panel.reset();
             }
         }
@@ -187,8 +187,8 @@ public class GameUI extends JFrame {
     }
 
     private void resetButtons(boolean shouldDeleteLabel) {
-        for (JButton[] btns : this.btns) {
-            for (JButton btn: btns) {
+        for (JButton[] btnArr : this.btns) {
+            for (JButton btn: btnArr) {
                 if (shouldDeleteLabel) {
                     btn.setText("");
                 }
@@ -198,8 +198,8 @@ public class GameUI extends JFrame {
     }
 
     private void deactivateButtons() {
-        for (JButton[] btns : this.btns) {
-            for (JButton btn: btns) {
+        for (JButton[] btnArr : this.btns) {
+            for (JButton btn: btnArr) {
                 btn.setEnabled(false);
             }
         }
