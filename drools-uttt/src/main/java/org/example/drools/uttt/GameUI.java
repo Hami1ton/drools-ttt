@@ -46,7 +46,7 @@ public class GameUI extends JFrame {
 
         setTitle("スーパー マルバツゲーム");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(465, 550);
+        setSize(490, 550);
         setLocationRelativeTo(null);
 
         // ステータスラベル
@@ -62,7 +62,7 @@ public class GameUI extends JFrame {
         // 盤面
         JPanel boardPanel = new JPanel(new GridLayout(9, 9));
         boardPanel.setBackground(Color.WHITE);
-        boardPanel.setBounds(0, 0, 450, 450);
+        boardPanel.setBounds(10, 0, 450, 450);
         add(boardPanel, BorderLayout.CENTER);
 
         // ボタン
@@ -83,7 +83,7 @@ public class GameUI extends JFrame {
         JLayeredPane layeredPane = new JLayeredPane();
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                OverlayPanel overlayPanel = new OverlayPanel(j * 150, i * 150, 150, 150);
+                OverlayPanel overlayPanel = new OverlayPanel(10 + j * 150, i * 150, 150, 150);
 
                 layeredPane.add(overlayPanel, JLayeredPane.PALETTE_LAYER);
                 add(layeredPane, BorderLayout.CENTER);
