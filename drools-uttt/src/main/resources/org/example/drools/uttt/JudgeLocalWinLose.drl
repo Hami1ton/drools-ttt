@@ -1,7 +1,7 @@
 package org.example.drools.uttt;
 
 
-rule "ローカル領域の勝敗判定_行の記号がそろう"
+rule "ローカル盤面の勝敗判定_行の記号がそろう"
   when
     $status : GameStatus( isGameOver == false )
     $mark : Mark()
@@ -13,7 +13,7 @@ rule "ローカル領域の勝敗判定_行の記号がそろう"
     insert( new OverlayCmd($mark.globalRow, $mark.globalCol, $mark.mark) );
 end
 
-rule "ローカル領域の勝敗判定_列の記号がそろう"
+rule "ローカル盤面の勝敗判定_列の記号がそろう"
   when
     $status : GameStatus( isGameOver == false )
     $mark : Mark()
@@ -25,7 +25,7 @@ rule "ローカル領域の勝敗判定_列の記号がそろう"
     insert( new OverlayCmd($mark.globalRow, $mark.globalCol, $mark.mark) );
 end
 
-rule "ローカル領域の勝敗判定_斜め_左上から右下がそろう"
+rule "ローカル盤面の勝敗判定_斜め_左上から右下がそろう"
   when
     $status : GameStatus( isGameOver == false )
     $mark : Mark( localRow == 0, localCol == 0 )
@@ -37,7 +37,7 @@ rule "ローカル領域の勝敗判定_斜め_左上から右下がそろう"
     insert( new OverlayCmd($mark.globalRow, $mark.globalCol, $mark.mark) );
 end
 
-rule "ローカル領域の勝敗判定_斜め_右上から左下がそろう"
+rule "ローカル盤面の勝敗判定_斜め_右上から左下がそろう"
   when
     $status : GameStatus( isGameOver == false )
     $mark : Mark( localRow == 0, localCol == 2 )
@@ -49,7 +49,7 @@ rule "ローカル領域の勝敗判定_斜め_右上から左下がそろう"
     insert( new OverlayCmd($mark.globalRow, $mark.globalCol, $mark.mark) );
 end
 
-rule "ローカル領域の引き分け判定"
+rule "ローカル盤面の引き分け判定"
   when
     $status : GameStatus( isGameOver == false )
     $mark : Mark()
