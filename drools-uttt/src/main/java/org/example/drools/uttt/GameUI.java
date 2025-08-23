@@ -112,6 +112,7 @@ public class GameUI extends JFrame {
 
                 } else if (obj instanceof GameOverCmd) {
                     gameOver = true;
+                    deactivateButtons();
 
                 } else if (obj instanceof OverlayCmd cmd) {
                     overlayPanels[cmd.row()][cmd.col()].setWinner(cmd.mark());
@@ -192,6 +193,14 @@ public class GameUI extends JFrame {
                     btn.setText("");
                 }
                 btn.setEnabled(true);
+            }
+        }
+    }
+
+    private void deactivateButtons() {
+        for (JButton[] btns : this.btns) {
+            for (JButton btn: btns) {
+                btn.setEnabled(false);
             }
         }
     }
